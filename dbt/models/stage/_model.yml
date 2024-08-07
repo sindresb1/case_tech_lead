@@ -1,0 +1,165 @@
+version: 2
+models:
+
+- name: m_customers
+  description: Dimension table for customer details
+  data_tests:
+  - dbt_utils.unique_combination_of_columns:
+      combination_of_columns:
+      - customer_id
+  columns:
+  - name: customer_id
+    description: Unique identifier for each customer
+    data_tests:
+    - unique
+    - not_null
+  - name: full_name
+    description: Full name of the customer
+  - name: email
+    description: Email address of the customer
+    data_tests:
+    - not_null
+  - name: phone_number
+    description: Phone number of the customer
+  - name: address
+    description: Residential address of the customer
+  - name: account_creation_date
+    description: Date when the customer account was created
+  - name: last_login_date
+    description: Date when the customer last logged in
+  - name: is_active
+    description: Indicates if the customer account is active
+    data_tests:
+    - accepted_values:
+        values: ['true', 'false']
+
+- name: t_products
+  description: Dimension table for product information
+  data_tests:
+  - dbt_utils.unique_combination_of_columns:
+      combination_of_columns:
+      - product_id
+  columns:
+  - name: product_id
+    description: Unique identifier for each product
+    data_tests:
+    - unique
+    - not_null
+  - name: product_name
+    description: Name of the product
+  - name: category
+    description: Category of the product
+  - name: price
+    description: Price of the product
+    data_tests:
+    - not_null
+  - name: stock_quantity
+    description: Quantity of product available in stock
+  - name: supplier_id
+    description: Identifier for the supplier of the product
+  - name: is_discontinued
+    description: Indicates if the product is discontinued
+    data_tests:
+    - accepted_values:
+        values: ['true', 'false']
+
+- name: sales_orders
+  description: Fact table for sales orders
+  data_tests:
+  - dbt_utils.unique_combination_of_columns:
+      combination_of_columns:
+      - order_id
+  columns:
+  - name: order_id
+    description: Unique identifier for each order
+    data_tests:
+    - unique
+    - not_null
+  - name: customer_id
+    description: Identifier for the customer who placed the order
+  - name: order_date
+    description: Date when the order was placed
+  - name: total_amount
+    description: Total amount of the order
+    data_tests:
+    - not_null
+  - name: status
+    description: Status of the order
+    data_tests:
+    - accepted_values:
+        values: ['pending', 'completed', 'shipped', 'returned']
+  - name: payment_method
+    description: Payment method used for the order
+  - name: shipping_address
+    description: Address to which the order will be shipped
+
+- name: p_suppliers
+  description: Dimension table for supplier information
+  data_tests:
+  - dbt_utils.unique_combination_of_columns:
+      combination_of_columns:
+      - supplier_id
+  columns:
+  - name: supplier_id
+    description: Unique identifier for each supplier
+    data_tests:
+    - unique
+    - not_null
+  - name: supplier_name
+    description: Name of the supplier
+  - name: contact_person
+    description: Contact person at the supplier
+  - name: phone_number
+    description: Phone number of the supplier
+  - name: email
+    description: Email address of the supplier
+  - name: address
+    description: Address of the supplier
+  - name: is_preferred
+    description: Indicates if the supplier is a preferred supplier
+    data_tests:
+    - accepted_values:
+        values: ['true', 'false']
+
+- name: sales_order_items
+  description: Fact table for items in sales orders
+  data_tests:
+  - dbt_utils.unique_combination_of_columns:
+      combination_of_columns:
+      - order_id
+      - product_id
+  columns:
+  - name: order_id
+    description: Identifier for the order
+  - name: product_id
+    description: Identifier for the product in the order
+  - name: quantity
+    description: Quantity of the product ordered
+  - name: unit_price
+    description: Unit price of the product at the time of order
+  - name: total_price
+    description: Total price for the ordered quantity
+    data_tests:
+    - not_null
+
+- name: p_categories
+  description: Dimension table for product categories
+  data_tests:
+  - dbt_utils.unique_combination_of_columns:
+      combination_of_columns:
+      - category_id
+  columns:
+  - name: category_id
+    description: Unique identifier for each category
+    data_tests:
+    - unique
+    - not_null
+  - name: category_name
+    description: Name of the category
+  - name: description
+    description: Description of the category
+  - name: is_active
+    description: Indicates if the category is active
+    data_tests:
+    - accepted_values:
+        values: ['true', 'false']
